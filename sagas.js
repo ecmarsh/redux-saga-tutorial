@@ -1,14 +1,18 @@
-import { put, takeEvery, all } from 'redux-saga/effects'
+import { call, put, takeEvery, all } from 'redux-saga/effects'
 
-const delay = ms => new Promise(res => setTimeout(res, ms))
+export const delay = ms => new Promise(res => setTimeout(res, ms))
 
 function* helloSaga() {
   console.log('Hello Sagas!')
 }
 
 // "Worker saga" to perform the async increment task
-function* incrementAsync() {
-  yield delay(1000) // => Promise that blocks generator
+export function* incrementAsync() {
+  // Use call to pass to pass it to caller of next for testing
+  // yield delay(1000) => Promise that blocks generator
+  // yield call(...) => { CALL: {fn: delay, args[1000]}}
+  yield call(delay, 1000)
+
   // Sagas equivalent of callback, runs after promise (or whatever async action) is resolved
   // Note `put` returns an object that instructs Saga to dispatch the INCREMENT action
   yield put({ type: 'INCREMENT' })
